@@ -1,7 +1,8 @@
 const express = require("express");
 const app = express();
 const sequelize = require("./SDatabase.js");
-const Model = require("./sequlaize.js"); // Import the model
+const { Model, newModel } = require("./sequlaize.js");
+
 const cors = require("cors"); // Import the cors middleware
 const { rejects } = require("assert");
 const bcrypt = require("bcrypt");
@@ -97,13 +98,71 @@ app.post("/signin", async (req, res) => {
       if (err || !result) {
         return res.status(401).json("Invalid password");
       }
-      console.log("Login successful");
+      // console.log("Login successful");
       res.status(200).json("Login successful");
     });
   } catch (error) {
     res.status(500).json("Error signing in");
   }
 });
+
+// expense table
+
+app.post("/addexpense", (req,res)=>{
+  const {amount, description, category} = req.body;
+  const newUser =  newModel.create({
+    amount,
+    description,
+    category,
+  });
+  res.status(201).json(req.body);
+
+})
+
+app.get("/getall", (req, res) => {
+  newModel.findAll().then((userData) => {
+    // console.log(userData);
+    res.status(200).json(userData);
+  })
+  .catch((error) => {
+    console.error("Error fetching data:", error);
+    res.status(500).send("Internal Server Error");
+  });
+});
+
+app.delete("/deldata", (req, res) => {
+  const id = req.body.id;
+  console.log(id);
+  newModel.destroy({ where: { id } }).then((result) =>{
+    res.status(200).json("sucessfully deleted the data");
+  })
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 sequelize
   .sync()

@@ -26,5 +26,5 @@ function check(param) {
 
 Signup.addEventListener("click", (event) => {
     event.preventDefault();
-    window.location.href = "index.html";
+    window.location.href = "signup.html";
   });
